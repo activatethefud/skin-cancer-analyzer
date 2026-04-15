@@ -36,7 +36,7 @@ export interface User {
   email: string
 }
 
-const CLASS_LABELS: Record<string, string> = {
+export const CLASS_LABELS: Record<string, string> = {
   nv: 'Melanocytic nevi (benign)',
   mel: 'Melanoma (malignant)',
   bkl: 'Benign keratosis',

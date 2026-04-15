@@ -1,6 +1,12 @@
 import pytest
 from unittest.mock import patch, MagicMock
-import torch
+
+torch_available = False
+try:
+    import torch
+    torch_available = True
+except ImportError:
+    pytest.skip("PyTorch not installed", allow_module_level=True)
 
 
 class TestModel:

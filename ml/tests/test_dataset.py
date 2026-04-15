@@ -2,6 +2,13 @@ import pytest
 from unittest.mock import patch, MagicMock
 from pathlib import Path
 
+torch_available = False
+try:
+    import torch
+    torch_available = True
+except ImportError:
+    pytest.skip("PyTorch not installed", allow_module_level=True)
+
 
 class TestDataset:
     def test_class_to_idx_mapping(self):
