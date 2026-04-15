@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.env
+*.db
+
+# Node
+node_modules/
+.next/
+out/
+
+# ML
+data/
+models/*.pth
+models/*.pth_metadata.json
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
