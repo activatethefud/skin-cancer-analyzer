@@ -1,13 +1,8 @@
-CLASS_NAMES = ['nv', 'mel', 'bkl', 'vasc', 'bcc', 'akiec', 'df']
+CLASS_NAMES = ['benign', 'malignant']
 
 CLASS_LABELS = {
-    'nv': 'Melanocytic nevi (benign)',
-    'mel': 'Melanoma (malignant)',
-    'bkl': 'Benign keratosis',
-    'vasc': 'Vascular lesions',
-    'bcc': 'Basal cell carcinoma',
-    'akiec': 'Actinic keratoses',
-    'df': 'Dermatofibroma',
+    'benign': 'Benign lesion',
+    'malignant': 'Malignant lesion',
 }
 
 IMG_SIZE = 224
@@ -17,5 +12,7 @@ EPOCHS = 10
 LEARNING_RATE = 0.001
 MODEL_NAME = 'mobilenet_v3_small'
 
-DATA_DIR = 'data/HAM10000'
+DATA_DIR = 'data/skin_lesion_binary'
 MODEL_DIR = 'models'
+
+HF_DATASET = 'preetsojitra/binary-2K-samples-skin-lesion-HM10000'

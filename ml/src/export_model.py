@@ -17,9 +17,11 @@ def export_model(
     model.load_state_dict(state_dict)
     model.eval()
     
+    inner_state_dict = model.model.state_dict()
+    
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     torch.save({
-        'model_state_dict': state_dict,
+        'model_state_dict': inner_state_dict,
         'class_names': class_names,
         'num_classes': len(class_names)
     }, output_path)

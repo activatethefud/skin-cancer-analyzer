@@ -37,13 +37,8 @@ export interface User {
 }
 
 export const CLASS_LABELS: Record<string, string> = {
-  nv: 'Melanocytic nevi (benign)',
-  mel: 'Melanoma (malignant)',
-  bkl: 'Benign keratosis',
-  vasc: 'Vascular lesions',
-  bcc: 'Basal cell carcinoma',
-  akiec: 'Actinic keratoses',
-  df: 'Dermatofibroma',
+  benign: 'Benign lesion',
+  malignant: 'Malignant lesion',
 }
 
 export function getClassLabel(className: string): string {
@@ -51,5 +46,5 @@ export function getClassLabel(className: string): string {
 }
 
 export function isMalignant(className: string): boolean {
-  return className === 'mel' || className === 'bcc' || className === 'akiec'
+  return className === 'malignant'
 }

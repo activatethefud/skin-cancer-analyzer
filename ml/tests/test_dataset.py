@@ -12,42 +12,34 @@ except ImportError:
 
 class TestDataset:
     def test_class_to_idx_mapping(self):
-        from src.dataset import SkinLesionDataset
+        from src.dataset import BinarySkinLesionDataset
         from src.config import CLASS_NAMES
         
         mock_paths = {
             'img1': {
                 'path': '/fake/path/img1.jpg',
-                'lesion_type': 'nv',
-                'dx_type': 'CONFOCAL',
-                'age': 50,
-                'sex': 'male',
-                'localization': 'back'
+                'label': 'benign'
             }
         }
         
         with patch('PIL.Image.Image.convert', return_value=MagicMock()):
-            dataset = SkinLesionDataset(mock_paths)
+            dataset = BinarySkinLesionDataset(mock_paths)
         
-        assert dataset.class_to_idx['nv'] == 0
-        assert dataset.class_to_idx['mel'] == 1
+        assert dataset.class_to_idx['benign'] == 0
+        assert dataset.class_to_idx['malignant'] == 1
     
     def test_dataset_length(self):
-        from src.dataset import SkinLesionDataset
+        from src.dataset import BinarySkinLesionDataset
         
         mock_paths = {
             f'img{i}': {
                 'path': f'/fake/path/img{i}.jpg',
-                'lesion_type': 'nv',
-                'dx_type': 'CONFOCAL',
-                'age': 50,
-                'sex': 'male',
-                'localization': 'back'
+                'label': 'benign'
             }
             for i in range(5)
         }
         
         with patch('PIL.Image.Image.convert', return_value=MagicMock()):
-            dataset = SkinLesionDataset(mock_paths)
+            dataset = BinarySkinLesionDataset(mock_paths)
         
         assert len(dataset) == 5

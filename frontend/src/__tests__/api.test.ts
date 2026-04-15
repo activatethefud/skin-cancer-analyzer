@@ -1,18 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import { getClassLabel, isMalignant, AnalysisResult } from '@/lib/api'
+import { getClassLabel, isMalignant } from '@/lib/api'
 
 describe('API utilities', () => {
   describe('getClassLabel', () => {
-    it('returns label for nv class', () => {
-      expect(getClassLabel('nv')).toBe('Melanocytic nevi (benign)')
+    it('returns label for benign class', () => {
+      expect(getClassLabel('benign')).toBe('Benign lesion')
     })
 
-    it('returns label for mel class', () => {
-      expect(getClassLabel('mel')).toBe('Melanoma (malignant)')
-    })
-
-    it('returns label for bcc class', () => {
-      expect(getClassLabel('bcc')).toBe('Basal cell carcinoma')
+    it('returns label for malignant class', () => {
+      expect(getClassLabel('malignant')).toBe('Malignant lesion')
     })
 
     it('returns class name for unknown class', () => {
@@ -21,24 +17,16 @@ describe('API utilities', () => {
   })
 
   describe('isMalignant', () => {
-    it('returns true for melanoma', () => {
-      expect(isMalignant('mel')).toBe(true)
+    it('returns true for malignant', () => {
+      expect(isMalignant('malignant')).toBe(true)
     })
 
-    it('returns true for basal cell carcinoma', () => {
-      expect(isMalignant('bcc')).toBe(true)
+    it('returns false for benign', () => {
+      expect(isMalignant('benign')).toBe(false)
     })
 
-    it('returns true for actinic keratoses', () => {
-      expect(isMalignant('akiec')).toBe(true)
-    })
-
-    it('returns false for melanocytic nevi', () => {
-      expect(isMalignant('nv')).toBe(false)
-    })
-
-    it('returns false for benign keratosis', () => {
-      expect(isMalignant('bkl')).toBe(false)
+    it('returns false for unknown class', () => {
+      expect(isMalignant('unknown')).toBe(false)
     })
   })
 })

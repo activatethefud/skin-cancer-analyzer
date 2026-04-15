@@ -7,45 +7,20 @@ describe('API constants', () => {
     expect(typeof API_URL).toBe('string')
   })
 
-  it('CLASS_LABELS contains all 7 classes', () => {
-    expect(Object.keys(CLASS_LABELS)).toHaveLength(7)
-    expect(CLASS_LABELS).toHaveProperty('nv')
-    expect(CLASS_LABELS).toHaveProperty('mel')
-    expect(CLASS_LABELS).toHaveProperty('bkl')
-    expect(CLASS_LABELS).toHaveProperty('vasc')
-    expect(CLASS_LABELS).toHaveProperty('bcc')
-    expect(CLASS_LABELS).toHaveProperty('akiec')
-    expect(CLASS_LABELS).toHaveProperty('df')
+  it('CLASS_LABELS contains 2 binary classes', () => {
+    expect(Object.keys(CLASS_LABELS)).toHaveLength(2)
+    expect(CLASS_LABELS).toHaveProperty('benign')
+    expect(CLASS_LABELS).toHaveProperty('malignant')
   })
 })
 
 describe('getClassLabel', () => {
-  it('returns full label for nv class', () => {
-    expect(getClassLabel('nv')).toBe('Melanocytic nevi (benign)')
+  it('returns full label for benign class', () => {
+    expect(getClassLabel('benign')).toBe('Benign lesion')
   })
 
-  it('returns full label for mel class', () => {
-    expect(getClassLabel('mel')).toBe('Melanoma (malignant)')
-  })
-
-  it('returns full label for bkl class', () => {
-    expect(getClassLabel('bkl')).toBe('Benign keratosis')
-  })
-
-  it('returns full label for vasc class', () => {
-    expect(getClassLabel('vasc')).toBe('Vascular lesions')
-  })
-
-  it('returns full label for bcc class', () => {
-    expect(getClassLabel('bcc')).toBe('Basal cell carcinoma')
-  })
-
-  it('returns full label for akiec class', () => {
-    expect(getClassLabel('akiec')).toBe('Actinic keratoses')
-  })
-
-  it('returns full label for df class', () => {
-    expect(getClassLabel('df')).toBe('Dermatofibroma')
+  it('returns full label for malignant class', () => {
+    expect(getClassLabel('malignant')).toBe('Malignant lesion')
   })
 
   it('returns class name for unknown class', () => {
@@ -59,32 +34,12 @@ describe('getClassLabel', () => {
 })
 
 describe('isMalignant', () => {
-  it('returns true for melanoma', () => {
-    expect(isMalignant('mel')).toBe(true)
+  it('returns true for malignant', () => {
+    expect(isMalignant('malignant')).toBe(true)
   })
 
-  it('returns true for basal cell carcinoma', () => {
-    expect(isMalignant('bcc')).toBe(true)
-  })
-
-  it('returns true for actinic keratoses', () => {
-    expect(isMalignant('akiec')).toBe(true)
-  })
-
-  it('returns false for melanocytic nevi', () => {
-    expect(isMalignant('nv')).toBe(false)
-  })
-
-  it('returns false for benign keratosis', () => {
-    expect(isMalignant('bkl')).toBe(false)
-  })
-
-  it('returns false for vascular lesions', () => {
-    expect(isMalignant('vasc')).toBe(false)
-  })
-
-  it('returns false for dermatofibroma', () => {
-    expect(isMalignant('df')).toBe(false)
+  it('returns false for benign', () => {
+    expect(isMalignant('benign')).toBe(false)
   })
 
   it('returns false for unknown class', () => {

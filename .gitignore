@@ -18,8 +18,8 @@ out/
 
 # ML
 data/
-models/*.pth
-models/*.pth_metadata.json
+**/models/
+**/models/*
 
 # IDE
 .vscode/

@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 
 from src.model import SkinCancerClassifier
-from src.dataset import SkinLesionDataset, create_data_loaders
+from src.dataset import BinarySkinLesionDataset, create_data_loaders
 from src.config import (
     CLASS_NAMES, EPOCHS, LEARNING_RATE, 
     MODEL_DIR, DATA_DIR, BATCH_SIZE
@@ -98,12 +98,12 @@ def train(
 
 
 if __name__ == "__main__":
-    from prepare_dataset import organize_by_metadata
+    from prepare_dataset import get_image_paths
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Training on {device}")
     
-    image_paths = organize_by_metadata(DATA_DIR)
+    image_paths = get_image_paths(DATA_DIR)
     
     train_paths, temp_paths = train_test_split(
         list(image_paths.keys()), 
@@ -118,7 +118,9 @@ if __name__ == "__main__":
     
     train_dict = {k: image_paths[k] for k in train_paths}
     val_dict = {k: image_paths[k] for k in val_paths}
-    test_dict = {k: image_paths[k] for k in test_paths}
+    
+    print(f"Training samples: {len(train_dict)}")
+    print(f"Validation samples: {len(val_dict)}")
     
     model = train(train_dict, val_dict, epochs=EPOCHS, device=device)
     

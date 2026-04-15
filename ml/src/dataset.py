@@ -1,16 +1,14 @@
 import torch
-import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
 from PIL import Image
-import pandas as pd
 from pathlib import Path
 from typing import Optional
 
 from src.config import IMG_SIZE, BATCH_SIZE, NUM_WORKERS, CLASS_NAMES
 
 
-class SkinLesionDataset(Dataset):
+class BinarySkinLesionDataset(Dataset):
     def __init__(self, image_paths: dict, transform: Optional[transforms.Compose] = None):
         self.image_ids = list(image_paths.keys())
         self.image_paths = image_paths
@@ -33,15 +31,15 @@ class SkinLesionDataset(Dataset):
         
         image = Image.open(info['path']).convert('RGB')
         image = self.transform(image)
-        label = self.class_to_idx[info['lesion_type']]
+        label = self.class_to_idx[info['label']]
         
         return image, label
 
 
 def create_data_loaders(train_paths: dict, val_paths: dict, test_paths: dict) -> tuple:
-    train_dataset = SkinLesionDataset(train_paths)
-    val_dataset = SkinLesionDataset(val_paths)
-    test_dataset = SkinLesionDataset(test_paths)
+    train_dataset = BinarySkinLesionDataset(train_paths)
+    val_dataset = BinarySkinLesionDataset(val_paths)
+    test_dataset = BinarySkinLesionDataset(test_paths) if test_paths else None
     
     train_loader = DataLoader(
         train_dataset,
@@ -59,12 +57,14 @@ def create_data_loaders(train_paths: dict, val_paths: dict, test_paths: dict) ->
         pin_memory=torch.cuda.is_available()
     )
     
-    test_loader = DataLoader(
-        test_dataset,
-        batch_size=BATCH_SIZE,
-        shuffle=False,
-        num_workers=NUM_WORKERS,
-        pin_memory=torch.cuda.is_available()
-    )
+    test_loader = None
+    if test_dataset:
+        test_loader = DataLoader(
+            test_dataset,
+            batch_size=BATCH_SIZE,
+            shuffle=False,
+            num_workers=NUM_WORKERS,
+            pin_memory=torch.cuda.is_available()
+        )
     
     return train_loader, val_loader, test_loader

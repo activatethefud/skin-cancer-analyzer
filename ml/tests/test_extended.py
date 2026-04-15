@@ -41,63 +41,51 @@ class TestConfigExtended:
 @pytest.mark.skipif(not torch_available, reason="PyTorch not installed")
 class TestDatasetExtended:
     def test_dataset_with_multiple_classes(self):
-        from src.dataset import SkinLesionDataset
+        from src.dataset import BinarySkinLesionDataset
         from src.config import CLASS_NAMES
         
         mock_paths = {
             f'img{i}': {
                 'path': f'/fake/path/img{i}.jpg',
-                'lesion_type': CLASS_NAMES[i % len(CLASS_NAMES)],
-                'dx_type': 'CONFOCAL',
-                'age': 50,
-                'sex': 'male',
-                'localization': 'back'
+                'label': CLASS_NAMES[i % len(CLASS_NAMES)]
             }
-            for i in range(14)
+            for i in range(4)
         }
         
         with patch('PIL.Image.Image.convert', return_value=MagicMock()):
-            dataset = SkinLesionDataset(mock_paths)
+            dataset = BinarySkinLesionDataset(mock_paths)
         
-        assert len(dataset) == 14
-        assert len(dataset.class_to_idx) == 7
+        assert len(dataset) == 4
+        assert len(dataset.class_to_idx) == 2
 
     def test_class_to_idx_complete(self):
-        from src.dataset import SkinLesionDataset
+        from src.dataset import BinarySkinLesionDataset
         
         mock_paths = {
             'img1': {
                 'path': '/fake/path/img1.jpg',
-                'lesion_type': 'nv',
-                'dx_type': 'CONFOCAL',
-                'age': 50,
-                'sex': 'male',
-                'localization': 'back'
+                'label': 'benign'
             }
         }
         
         with patch('PIL.Image.Image.convert', return_value=MagicMock()):
-            dataset = SkinLesionDataset(mock_paths)
+            dataset = BinarySkinLesionDataset(mock_paths)
         
-        for cls in ['nv', 'mel', 'bkl', 'vasc', 'bcc', 'akiec', 'df']:
+        for cls in ['benign', 'malignant']:
             assert cls in dataset.class_to_idx
 
     def test_transform_includes_normalization(self):
-        from src.dataset import SkinLesionDataset
+        from src.dataset import BinarySkinLesionDataset
         
         mock_paths = {
             'img1': {
                 'path': '/fake/path/img1.jpg',
-                'lesion_type': 'nv',
-                'dx_type': 'CONFOCAL',
-                'age': 50,
-                'sex': 'male',
-                'localization': 'back'
+                'label': 'benign'
             }
         }
         
         with patch('PIL.Image.Image.convert', return_value=MagicMock()):
-            dataset = SkinLesionDataset(mock_paths)
+            dataset = BinarySkinLesionDataset(mock_paths)
         
         assert dataset.transform is not None
 
@@ -113,7 +101,7 @@ class TestModelExtended:
     def test_model_has_classifier_layer(self):
         from src.model import SkinCancerClassifier
         
-        model = SkinCancerClassifier(num_classes=7, pretrained=False)
+        model = SkinCancerClassifier(num_classes=2, pretrained=False)
         assert hasattr(model, 'model')
         assert hasattr(model.model, 'classifier')
 
@@ -121,7 +109,7 @@ class TestModelExtended:
         from src.model import SkinCancerClassifier
         import torch
         
-        model = SkinCancerClassifier(num_classes=7, pretrained=False)
+        model = SkinCancerClassifier(num_classes=2, pretrained=False)
         model.eval()
         
         batch_sizes = [1, 4, 16]
@@ -130,13 +118,13 @@ class TestModelExtended:
             with torch.no_grad():
                 output = model(dummy_input)
             assert output.shape[0] == batch_size
-            assert output.shape[1] == 7
+            assert output.shape[1] == 2
 
     def test_model_softmax_output(self):
         from src.model import SkinCancerClassifier
         import torch
         
-        model = SkinCancerClassifier(num_classes=7, pretrained=False)
+        model = SkinCancerClassifier(num_classes=2, pretrained=False)
         model.eval()
         
         dummy_input = torch.randn(2, 3, 224, 224)

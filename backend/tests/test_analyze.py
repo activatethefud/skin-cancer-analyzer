@@ -28,8 +28,8 @@ class TestAnalyze:
         assert "top_prediction" in data
         assert "confidence" in data
         assert "all_predictions" in data
-        assert len(data["all_predictions"]) == 7
-        assert data["all_predictions"][0]["class_name"] == "nv"
+        assert len(data["all_predictions"]) == 2
+        assert data["all_predictions"][0]["class_name"] == "benign"
 
     def test_analyze_invalid_file_type(self, client, auth_headers):
         files = {"file": ("test.txt", BytesIO(b"hello"), "text/plain")}
@@ -53,4 +53,4 @@ class TestAnalyze:
         data = response.json()
         assert "model_loaded" in data
         assert "message" in data
-        assert data["model_loaded"] is False
+        assert data["model_loaded"] is True

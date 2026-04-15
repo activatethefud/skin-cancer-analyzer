@@ -7,7 +7,7 @@ import json
 
 from app.core.config import settings
 
-CLASS_NAMES = ['nv', 'mel', 'bkl', 'vasc', 'bcc', 'akiec', 'df']
+CLASS_NAMES = ['benign', 'malignant']
 
 MODEL_PATH = os.path.join(settings.UPLOAD_DIR, "..", "models", "skin_cancer_model.pth")
 METADATA_PATH = os.path.join(settings.UPLOAD_DIR, "..", "models", "skin_cancer_model_metadata.json")
@@ -100,13 +100,8 @@ def predict(image_path: str) -> list[dict]:
 
 def get_mock_predictions() -> list[dict]:
     return [
-        {"class_name": "nv", "confidence": 0.72},
-        {"class_name": "mel", "confidence": 0.15},
-        {"class_name": "bkl", "confidence": 0.05},
-        {"class_name": "bcc", "confidence": 0.04},
-        {"class_name": "akiec", "confidence": 0.02},
-        {"class_name": "vasc", "confidence": 0.01},
-        {"class_name": "df", "confidence": 0.01},
+        {"class_name": "benign", "confidence": 0.85},
+        {"class_name": "malignant", "confidence": 0.15},
     ]
 
 
