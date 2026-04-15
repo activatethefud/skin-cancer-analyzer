@@ -7,6 +7,10 @@ build/
 .env
 *.db
 
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
 # Node
 node_modules/
 .next/
