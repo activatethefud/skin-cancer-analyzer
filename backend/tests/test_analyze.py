@@ -46,3 +46,11 @@ class TestAnalyze:
         response = client.post("/api/analyze", files=files, headers=auth_headers)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "too large" in response.json()["detail"].lower()
+
+    def test_model_status_endpoint(self, client):
+        response = client.get("/api/analyze/model-status")
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()
+        assert "model_loaded" in data
+        assert "message" in data
+        assert data["model_loaded"] is False

@@ -10,19 +10,9 @@ from app.core.security import get_current_user
 from app.core.config import settings
 from app.models.user import User
 from app.schemas.analysis import AnalysisResponse, AnalysisHistory, PredictionResult
+from app.services.inference import predict, is_model_loaded
 
 router = APIRouter(prefix="/analyze", tags=["analysis"])
-
-
-MOCK_PREDICTIONS = [
-    {"class_name": "nv", "confidence": 0.72},
-    {"class_name": "mel", "confidence": 0.15},
-    {"class_name": "bkl", "confidence": 0.05},
-    {"class_name": "bcc", "confidence": 0.04},
-    {"class_name": "akiec", "confidence": 0.02},
-    {"class_name": "vasc", "confidence": 0.01},
-    {"class_name": "df", "confidence": 0.01},
-]
 
 
 async def save_upload(file: UploadFile) -> str:
@@ -50,8 +40,10 @@ async def save_upload(file: UploadFile) -> str:
     return unique_filename
 
 
-async def get_predictions(image_path: str) -> List[PredictionResult]:
-    return [PredictionResult(**pred) for pred in MOCK_PREDICTIONS]
+async def get_predictions(image_filename: str) -> List[PredictionResult]:
+    image_path = os.path.join(settings.UPLOAD_DIR, image_filename)
+    predictions = predict(image_path)
+    return [PredictionResult(**pred) for pred in predictions]
 
 
 @router.post("", response_model=AnalysisResponse)
@@ -83,3 +75,11 @@ def get_history(
     current_user: User = Depends(get_current_user)
 ):
     return {"analyses": []}
+
+
+@router.get("/model-status")
+def get_model_status():
+    return {
+        "model_loaded": is_model_loaded(),
+        "message": "ML model is ready" if is_model_loaded() else "Using mock predictions (model not loaded)"
+    }
